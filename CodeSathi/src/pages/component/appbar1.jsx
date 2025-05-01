@@ -20,7 +20,7 @@ function Bar2() {
             flexDirection: "row",
             justifyContent: "space-between",
             padding: "15px",
-            backgroundColor: "white",
+            backgroundColor: "rgb(236, 242, 244)",
             
             
         }}>
@@ -28,7 +28,7 @@ function Bar2() {
             <div style={{
                 display: "flex",
                 gap: "20px",
-                alignItems: "center"
+                alignItems: "center",
             }}>
                  <IconButton onClick={() => console.log('Import/Export clicked')}>
                     <ImportExportIcon sx={{ fontSize: 30 }} />

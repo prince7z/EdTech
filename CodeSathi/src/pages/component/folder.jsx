@@ -62,11 +62,15 @@ function Foldersec() {
 
     return (
         <div style={{
-            backgroundColor: '#1e1e1e',
+            backgroundColor: 'blue',
             color: '#ffffff',
             padding: '10px',
             fontFamily: 'Arial, sans-serif',
-            fontSize: '14px'
+            fontSize: '13px',
+            width: '12vw',
+            height: '83.5vh',
+            overflow: 'scroll',
+            scrollbarWidth: 'none',
         }}>
             {folderStructure && renderItem(folderStructure)}
         </div>

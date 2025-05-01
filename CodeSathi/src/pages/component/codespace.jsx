@@ -9,11 +9,12 @@ function    Mid(){
     return(
         <>
         <div style={{
-            width: '100%',
+            // width: '100%',
             display: 'flex',
             flexDirection: 'column',
-            
-            minWidth: '800px'  // Add minimum width
+            // backgroundColor: 'green',
+            // border: '1px solid rgb(245, 241, 241)',
+            // minWidth: '55vw'  // Add minimum width
         }}>
         <Bar/>
         <Codespace/>
@@ -33,11 +34,15 @@ function Bar(){
         <>
         <div style={{
                 backgroundColor: '#252526',
-                width: '100%',
+                width: '65vw',
                 display: 'flex',
                 alignItems: 'center',
+                boxSizing: 'border-box',
                 padding: '4px 8px',
-                borderBottom: '1px solid #3c3c3c'
+                backgroundColor: 'green',
+
+                borderBottom: '1px solid #3c3c3c',
+
             }}>
                 <div style={{
                     backgroundColor: '#1e1e1e',
@@ -45,7 +50,8 @@ function Bar(){
                     display: 'flex',
                     alignItems: 'center',
                     gap: '8px',
-                    borderBottom: '2px solid #007acc'
+                    backgroundColor: '#007acc',
+                    borderBottom: '2px solid rgb(231, 231, 9)'
                 }}>
                     <span style={{ color: '#cccccc' }}>codespace.jsx</span>
                     <FaTimes style={{ 
@@ -67,13 +73,16 @@ function Output(){
     return(
         <>
          <div style={{
-                    backgroundColor: '#1e1e1e',
+                    backgroundColor: 'red',
                     color: '#ffffff',
                     padding: '10px',
-                    height: '190px',
+                    boxSizing: 'border-box',
+                    width: '65vw',
+                    height: '16.5vh',
                     borderTop: '1px solid #3c3c3c',
                     fontFamily: 'Consolas, monospace',
-                    overflow: 'auto'
+                    overflow: 'scroll',
+                    scrollbarWidth: 'none',
                 }}>
                     <div style={{
                         display: 'flex',
@@ -105,21 +114,32 @@ function Codespace() {
         setCode(value);
     };
 
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCode((prevCode) => prevCode + 'bckshg');
+            console.log(code);
+        }, 2000);
+        return () => clearInterval(interval); // Cleanup interval on unmount
+    }, [code]);
+
     return (
         
         
         
             
             <div style={{
-                width: '100%',
-                height: '70vh',
+                width: '65vw',
+                height: '64.4vh',
+                position: 'relative',
+                zIndex: 2,
+                // border: '0.5px solid rgb(238, 229, 229)',
             }}>
                 <Editor
                     height="100%"
-                    width="100%"  // Add explicit width
+                    width="65vw"  // Add explicit width
                     defaultLanguage="javascript"
                     defaultValue={code}
-                    theme="hc-black"
+                    theme="vs-dark"
                     onChange={handleEditorChange}
                     options={{
                         minimap: { enabled: true },

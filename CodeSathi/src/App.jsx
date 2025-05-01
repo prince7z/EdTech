@@ -18,7 +18,7 @@ function App() {
       
       <Bar></Bar>
          <BrowserRouter>
-        <bar></bar>
+        
         <Routes>
         <Route path="/workspace" element={<Workspace/>}></Route>
           

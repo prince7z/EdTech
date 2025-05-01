@@ -25,14 +25,12 @@ function Workspace(){
                 display:'flex',
                 flexDirection:'row',
             }}>
-            <Menu/>
+            {/* <Menu/> */}
             <Folder/>
             <Mid/>                      
              </div>
              
-             <div>
-                <Right/>
-             </div>
+             <Right/>
                     
      </div>
             

@@ -37,7 +37,7 @@ function Bar1({ logo }) {
                 display: "flex",
                 justifyContent: "space-between",
                 padding: "15px",
-                backgroundColor: "navy",
+                backgroundColor: "green",
                 color: "white",
 
             }}>
@@ -63,24 +63,44 @@ function Bar1({ logo }) {
 
     return (
 
-
+        
         <div style={{
             display: "flex",
-            justifyContent: "space-between",
-            padding: "15px",
-            backgroundColor: "navy",
+            justifyContent: "end",
+            padding: "4px 10px",
+            
+            // padding: "5px",
+            backgroundColor: "rgba(36, 4, 4, 0.9)",
             color: "white",
-
         }}>
 
             <div style={{
                 display: "flex",
+                position: "absolute",
+                left: "12px",
             }} >
-                <img src={logo}></img>
-                <Typography variant="h5">Bitron</Typography>
+                <Typography variant="h5" textAlign={'center'} padding={'4px'}>RealSync</Typography>
             </div>
-
-            <div >
+            <div style={{
+                display: "flex",
+                justifyContent: "space-around",
+                alignItems: "center",
+                justifySelf: "flex-end",
+                padding: "4px 10px",
+                gap: "10px",
+                fontSize: "12px",
+                // marginLeft: "10px",
+                // marginRight: "10px",
+            }}>
+                <Typography textAlign={'center'} padding={'4px'}>Home</Typography>
+                <Typography textAlign={'center'} padding={'4px'}>User</Typography> 
+                <Typography textAlign={'center'} padding={'4px'}>Projects</Typography>   
+            </div>                           
+            <div style={{
+                paddingLeft: "10px",
+                // paddingRight: "10px",
+            }}
+    >
                 <IconButton onClick={() => console.log('Account clicked')}>
                     <AccountCircleIcon sx={{ color: 'white', fontSize: 30 }} />
                 </IconButton>

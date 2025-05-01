@@ -21,8 +21,6 @@ function Bar2() {
             justifyContent: "space-between",
             padding: "15px",
             backgroundColor: "white",
-            
-            
         }}>
 
             <div style={{
