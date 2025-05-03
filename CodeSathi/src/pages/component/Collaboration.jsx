@@ -20,16 +20,33 @@ function Collaboration({ onCodeUpdate, roomId: propRoomId }) {
 
     const createRoom = async () => {
         try {
+            console.log('Attempting to create room...');
             const response = await fetch('http://localhost:5000/create-room', {
-                method: 'POST'
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
+            
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('Server response:', errorText);
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
             const data = await response.json();
+            console.log('Room created successfully:', data);
+            
             setRoomId(data.roomId);
             setIsHost(true);
             setShareLink(`${window.location.origin}/collaborate/${data.roomId}`);
             socket.emit('join-room', data.roomId);
         } catch (error) {
             console.error('Error creating room:', error);
+            if (error.response) {
+                console.error('Response status:', error.response.status);
+                console.error('Response text:', await error.response.text());
+            }
         }
     };
 

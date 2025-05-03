@@ -1,27 +1,65 @@
 import React, { useState, useEffect } from 'react';
 import { FaFolder, FaFolderOpen, FaFile, FaChevronRight, FaChevronDown } from 'react-icons/fa';
 
-function Folder() {
+function Folder({ onFileClick }) {
     return (
         <>
-            <Foldersec />
+            <Foldersec onFileClick={onFileClick} />
         </>
     )
 }
 
-function Foldersec() {
+function Foldersec({ onFileClick }) {
     const [expanded, setExpanded] = useState({});
     const [folderStructure, setFolderStructure] = useState(null);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
-        fetch('http://localhost:5000/folder')
-            .then(response => response.json())
-            .then(data => setFolderStructure(data))
-            .catch(error => console.error('Error:', error));
+        const fetchFolderStructure = async () => {
+            try {
+                // First test if the server is accessible
+                const testResponse = await fetch('http://localhost:5000/test');
+                if (!testResponse.ok) {
+                    throw new Error('Server is not responding');
+                }
+                const testData = await testResponse.json();
+                console.log('Server test response:', testData);
+
+                // Then fetch the folder structure
+                const response = await fetch('http://localhost:5000/folder');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                console.log('Received folder structure:', data);
+                setFolderStructure(data);
+                setError(null);
+            } catch (error) {
+                console.error('Error fetching folder structure:', error);
+                setError(error.message);
+            }
+        };
+
+        fetchFolderStructure();
     }, []);
 
     const toggleFolder = (path) => {
         setExpanded(prev => ({ ...prev, [path]: !prev[path] }));
+    };
+
+    const handleFileClick = async (path) => {
+        try {
+            console.log('Attempting to open file:', path);
+            const response = await fetch(`http://localhost:5000/file-content?path=${encodeURIComponent(path)}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            onFileClick(data.content, path);
+        } catch (error) {
+            console.error('Error fetching file content:', error);
+            setError(error.message);
+        }
     };
 
     const renderItem = (item, path = '') => {
@@ -39,7 +77,13 @@ function Foldersec() {
                         cursor: 'pointer',
                         gap: '4px'
                     }}
-                    onClick={() => item.type === 'folder' && toggleFolder(currentPath)}
+                    onClick={() => {
+                        if (item.type === 'folder') {
+                            toggleFolder(currentPath);
+                        } else {
+                            handleFileClick(item.path || currentPath);
+                        }
+                    }}
                 >
                     {item.type === 'folder' && (
                         isExpanded ? <FaChevronDown /> : <FaChevronRight />
@@ -72,7 +116,16 @@ function Foldersec() {
             overflow: 'scroll',
             scrollbarWidth: 'none',
         }}>
-            {folderStructure && renderItem(folderStructure)}
+            {error && (
+                <div style={{ color: 'red', marginBottom: '10px' }}>
+                    Error: {error}
+                </div>
+            )}
+            {folderStructure ? (
+                renderItem(folderStructure)
+            ) : (
+                <div>Loading folder structure...</div>
+            )}
         </div>
     );
 }

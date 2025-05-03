@@ -106,7 +106,7 @@ function Right() {
                     marginBottom: '4px',
                 }}>
                     <img
-                        src="./public/paperclip-solid.svg"
+                        src="/paperclip-solid.svg"
                         alt="paperclip icon"
                         style={{
                             width: '14px',
@@ -132,7 +132,7 @@ function Right() {
                         placeholder="Type a message"
                     />
                     <img
-                        src="./public/paper-plane-solid.svg"
+                        src="/paper-plane-solid.svg"
                         alt="send icon"
                         style={{
                             width: '14px',
@@ -180,19 +180,8 @@ function Right() {
                 scrollbarWidth: 'none',
                 padding: '4px 8px 8px 8px',
             }}>
-                <button onClick={() => setShowCollaboration(!showCollaboration)} style={{ all: 'unset', textDecoration: 'none' }}>
-                    <img src='./public/user-plus-solid.svg' alt='user' style={{
-                        width: '45px',
-                        height: '45px',
-                        padding: '2px',
-                        borderRadius: '50%',
-                        marginRight: '8px',
-                        marginBottom: '8px',
-                        backgroundColor: '#d0d0d0',
-                        cursor: 'pointer',
-                    }} />
-                </button>
-                <img src='./public/user-solid.svg' alt='user' style={{
+                
+                <img src='/user-solid.svg' alt='user' style={{
                     width: '45px',
                     height: '45px',
                     padding: '2px',
@@ -203,7 +192,7 @@ function Right() {
                 }}>  
                 </img>
 
-                <img src='./public/user-solid.svg' alt='user' style={{
+                <img src='/user-solid.svg' alt='user' style={{
                     width: '45px',
                     height: '45px',
                     padding: '2px',
@@ -213,7 +202,7 @@ function Right() {
                     backgroundColor: '#d0d0d0',
                 }}>  
                 </img>
-                <img src='./public/user-solid.svg' alt='user' style={{
+                <img src='/user-solid.svg' alt='user' style={{
                     width: '45px',
                     height: '45px',
                     padding: '2px',
@@ -223,6 +212,18 @@ function Right() {
                     backgroundColor: '#d0d0d0',
                 }}>  
                 </img>
+                <button onClick={() => setShowCollaboration(!showCollaboration)} style={{ all: 'unset', textDecoration: 'none' }}>
+                    <img src='/user-plus-solid.svg' alt='user' style={{
+                        width: '45px',
+                        height: '45px',
+                        padding: '2px',
+                        borderRadius: '50%',
+                        marginRight: '8px',
+                        marginBottom: '8px',
+                        backgroundColor: '#d0d0d0',
+                        cursor: 'pointer',
+                    }} />
+                </button>
                 </div>
             </div>
 
@@ -261,13 +262,13 @@ function Right() {
                     }}>
                         Video Conference
                     </span>
-                    <img src="./public/video-slash-solid.svg" alt="whiteboard" style={{
+                    <img src="/video-slash-solid.svg" alt="whiteboard" style={{
                         width: '25%',
                         height: '25%',
                         borderRadius: '4px',
                         backgroundColor: '#131618',
                     }} />
-                     <img src="./public/volume-high-solid.svg" alt="whiteboard" style={{
+                     <img src="/volume-high-solid.svg" alt="whiteboard" style={{
                         width: '25%',
                         height: '25%',
                         borderRadius: '4px',
@@ -276,7 +277,7 @@ function Right() {
                         left: '0',
                         bottom: '0',
                     }} />
-                    <img src="./public/play-solid.svg" alt="whiteboard" style={{
+                    <img src="/play-solid.svg" alt="whiteboard" style={{
                         width: '25%',
                         height: '25%',
                         borderRadius: '4px',
