@@ -70,7 +70,7 @@ function Bar1({ logo }) {
             padding: "4px 10px",
             
             // padding: "5px",
-            backgroundColor: "rgba(36, 4, 4, 0.9)",
+            backgroundColor: "#1e1e1e",
             color: "white",
         }}>
 

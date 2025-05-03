@@ -20,7 +20,7 @@ function Bar2() {
             flexDirection: "row",
             justifyContent: "space-between",
             padding: "15px",
-            backgroundColor: "rgb(236, 242, 244)",
+            backgroundColor: "rgb(246, 250, 255)",
             
             
         }}>

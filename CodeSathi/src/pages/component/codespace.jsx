@@ -39,7 +39,7 @@ function Bar(){
                 alignItems: 'center',
                 boxSizing: 'border-box',
                 padding: '4px 8px',
-                backgroundColor: 'green',
+                backgroundColor: '#000000',
 
                 borderBottom: '1px solid #3c3c3c',
 
@@ -50,8 +50,8 @@ function Bar(){
                     display: 'flex',
                     alignItems: 'center',
                     gap: '8px',
-                    backgroundColor: '#007acc',
-                    borderBottom: '2px solid rgb(231, 231, 9)'
+                    backgroundColor: '#131618',
+                    borderBottom: '2px solid rgb(255, 255, 255)'
                 }}>
                     <span style={{ color: '#cccccc' }}>codespace.jsx</span>
                     <FaTimes style={{ 
@@ -73,13 +73,13 @@ function Output(){
     return(
         <>
          <div style={{
-                    backgroundColor: 'red',
+                    backgroundColor: '#191f22',
                     color: '#ffffff',
                     padding: '10px',
                     boxSizing: 'border-box',
                     width: '65vw',
-                    height: '16.5vh',
-                    borderTop: '1px solid #3c3c3c',
+                    height: '16.4vh',
+                    // borderTop: '1px solid #3c3c3c',
                     fontFamily: 'Consolas, monospace',
                     overflow: 'scroll',
                     scrollbarWidth: 'none',
@@ -88,7 +88,7 @@ function Output(){
                         display: 'flex',
                         alignItems: 'center',
                         gap: '8px',
-                        borderBottom: '1px solid #3c3c3c',
+                        // borderBottom: '1px solid #3c3c3c',
                         padding: '5px 0'
                     }}>
                         <span style={{ color: '#cccccc' }}>Output</span>
@@ -114,13 +114,12 @@ function Codespace() {
         setCode(value);
     };
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setCode((prevCode) => prevCode + 'bckshg');
-            console.log(code);
-        }, 2000);
-        return () => clearInterval(interval); // Cleanup interval on unmount
-    }, [code]);
+    // useEffect(() => {
+    //     const interval = setInterval(() => {
+    //         console.log(code);
+    //     }, 2000);
+    //     return () => clearInterval(interval); // Cleanup interval on unmount
+    // }, [code]);
 
     return (
         
@@ -129,7 +128,7 @@ function Codespace() {
             
             <div style={{
                 width: '65vw',
-                height: '64.4vh',
+                height: '64.7vh',
                 position: 'relative',
                 zIndex: 2,
                 // border: '0.5px solid rgb(238, 229, 229)',
@@ -142,13 +141,17 @@ function Codespace() {
                     theme="vs-dark"
                     onChange={handleEditorChange}
                     options={{
-                        minimap: { enabled: true },
+                        minimap: { enabled: false },
                         fontSize: 14,
                         lineNumbers: 'on',
                         automaticLayout: true,
                         scrollBeyondLastLine: false,
                         wordWrap: 'on',
                         formatOnPaste: true,
+                        scrollbar: {
+                            vertical: 'hidden',
+                            horizontal: 'hidden',
+                        },
                         formatOnType: true,
                     }}
                 />

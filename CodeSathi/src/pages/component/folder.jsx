@@ -62,13 +62,13 @@ function Foldersec() {
 
     return (
         <div style={{
-            backgroundColor: 'blue',
+            backgroundColor: '#131618',
             color: '#ffffff',
             padding: '10px',
             fontFamily: 'Arial, sans-serif',
             fontSize: '13px',
             width: '12vw',
-            height: '83.5vh',
+            height: '83.6vh',
             overflow: 'scroll',
             scrollbarWidth: 'none',
         }}>
