@@ -180,7 +180,18 @@ function Right() {
                 scrollbarWidth: 'none',
                 padding: '4px 8px 8px 8px',
             }}>
-                
+                <button onClick={() => setShowCollaboration(!showCollaboration)} style={{ all: 'unset', textDecoration: 'none' }}>
+                    <img src='/user-plus-solid.svg' alt='user' style={{
+                        width: '45px',
+                        height: '45px',
+                        padding: '2px',
+                        borderRadius: '50%',
+                        marginRight: '8px',
+                        marginBottom: '8px',
+                        backgroundColor: '#d0d0d0',
+                        cursor: 'pointer',
+                    }} />
+                </button>
                 <img src='/user-solid.svg' alt='user' style={{
                     width: '45px',
                     height: '45px',
@@ -211,20 +222,7 @@ function Right() {
                     marginBottom: '8px',
                     backgroundColor: '#d0d0d0',
                 }}>  
-                </img>
-                <button onClick={() => setShowCollaboration(!showCollaboration)} style={{ all: 'unset', textDecoration: 'none' }}>
-                    <img src='/user-plus-solid.svg' alt='user' style={{
-                        width: '45px',
-                        height: '45px',
-                        padding: '2px',
-                        borderRadius: '50%',
-                        marginRight: '8px',
-                        marginBottom: '8px',
-                        backgroundColor: '#d0d0d0',
-                        cursor: 'pointer',
-                    }} />
-                </button>
-                </div>
+                </img>          </div>
             </div>
 
             <div style={{

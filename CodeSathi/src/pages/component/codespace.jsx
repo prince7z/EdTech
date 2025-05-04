@@ -4,7 +4,7 @@ import { FaTimes } from 'react-icons/fa';
 import io from 'socket.io-client';
 import { useParams } from 'react-router-dom';
 
-function Mid({ openFiles, activeFile, onCloseFile, onTabClick }) {
+function Mid({ openFiles, activeFile, onCloseFile, onTabClick, roomId, socket }) {
     return(
         <>
         <div style={{
@@ -21,6 +21,8 @@ function Mid({ openFiles, activeFile, onCloseFile, onTabClick }) {
             openFiles={openFiles} 
             activeFile={activeFile} 
             onCloseFile={onCloseFile}
+            roomId={roomId}
+            socket={socket}
         />
         <Output/>
         </div>
@@ -115,41 +117,26 @@ function Output(){
     )
 }
 
-function Codespace({ openFiles, activeFile, onCloseFile }) {
+function Codespace({ openFiles, activeFile, onCloseFile, roomId, socket }) {
     const [code, setCode] = useState('//write code here');
-    const [socket, setSocket] = useState(null);
-    const { roomId } = useParams();
+    const [fileVersion, setFileVersion] = useState(0);
     
-    useEffect(() => {
-        if (roomId) {
-            const newSocket = io('http://localhost:5000');
-            setSocket(newSocket);
-
-            newSocket.on('code-update', (newCode) => {
-                if (activeFile) {
-                    const updatedFiles = openFiles.map(file => 
-                        file.path === activeFile ? { ...file, content: newCode } : file
-                    );
-                    setCode(newCode);
-                }
-            });
-
-            return () => {
-                newSocket.disconnect();
-            };
-        }
-    }, [roomId, activeFile]);
-
     const handleEditorChange = (value) => {
         setCode(value);
+        
         // Update the content in openFiles
         const updatedFiles = openFiles.map(file => 
             file.path === activeFile ? { ...file, content: value } : file
         );
         
-        // Emit code change if in collaboration mode
-        if (socket && roomId) {
-            socket.emit('code-change', { roomId, code: value });
+        // Emit file change if in collaboration mode
+        if (socket && roomId && activeFile) {
+            socket.emit('file-change', { 
+                roomId, 
+                filePath: activeFile, 
+                content: value,
+                version: fileVersion
+            });
         }
     };
 
@@ -158,11 +145,38 @@ function Codespace({ openFiles, activeFile, onCloseFile }) {
             const currentFile = openFiles.find(file => file.path === activeFile);
             if (currentFile) {
                 setCode(currentFile.content);
+                setFileVersion(currentFile.version || 0);
             }
         } else {
             setCode('//write code here');
+            setFileVersion(0);
         }
     }, [activeFile, openFiles]);
+
+    useEffect(() => {
+        if (!socket) return;
+
+        socket.on('file-update', ({ filePath, content, version, changes }) => {
+            if (filePath === activeFile) {
+                console.log('Received file update:', { filePath, version, changes });
+                setCode(content);
+                setFileVersion(version);
+            }
+        });
+
+        socket.on('file-version-mismatch', ({ filePath, currentVersion, currentContent }) => {
+            if (filePath === activeFile) {
+                console.log('Version mismatch, updating to current version');
+                setCode(currentContent);
+                setFileVersion(currentVersion);
+            }
+        });
+
+        return () => {
+            socket.off('file-update');
+            socket.off('file-version-mismatch');
+        };
+    }, [socket, activeFile]);
 
     return (
         <div style={{

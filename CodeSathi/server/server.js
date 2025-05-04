@@ -4,9 +4,18 @@ const fs = require('fs-extra');
 const path = require('path');
 const { createServer } = require('http');
 const { Server } = require('socket.io');
+const diff = require('diff');
 
 const app = express();
 const httpServer = createServer(app);
+
+// Mock code snippets for simulation
+const mockCodeSnippets = [
+    '// Hello from collaborator!\nconsole.log("Let\'s build something amazing!");',
+    'function greet() {\n  return "Hello from the other side!";\n}',
+    '// Adding some new features\nconst newFeature = () => {\n  console.log("Feature added!");\n};',
+    '// Bug fix\nconst fixBug = () => {\n  console.log("Bug fixed!");\n};'
+];
 
 // Configure CORS
 app.use(cors({
@@ -21,16 +30,61 @@ const io = new Server(httpServer, {
         origin: "http://localhost:5173",
         methods: ["GET", "POST"],
         credentials: true
-    }
+    },
+    transports: ['websocket', 'polling'],
+    pingTimeout: 60000,
+    pingInterval: 25000,
+    upgradeTimeout: 30000,
+    maxHttpBufferSize: 1e8
 });
 
 const PORT = 5000;
 
-// Store room states
+// Store room states with version tracking
 const rooms = new Map();
 
 // Middleware
 app.use(express.json());
+
+// Mock function to simulate collaborator changes
+const simulateCollaboratorChanges = (roomId, filePath) => {
+    if (rooms.has(roomId)) {
+        const room = rooms.get(roomId);
+        const currentContent = room.files.get(filePath) || '';
+        const randomSnippet = mockCodeSnippets[Math.floor(Math.random() * mockCodeSnippets.length)];
+        const newContent = currentContent + '\n\n' + randomSnippet;
+        
+        // Update file content and version
+        room.files.set(filePath, newContent);
+        const currentVersion = room.versions.get(filePath) || 0;
+        room.versions.set(filePath, currentVersion + 1);
+        
+        // Broadcast changes to all users in the room
+        io.to(roomId).emit('file-update', {
+            filePath,
+            content: newContent,
+            version: currentVersion + 1,
+            source: 'collaborator'
+        });
+    }
+};
+
+// Endpoint to get file updates
+app.get('/file-updates', (req, res) => {
+    const { roomId } = req.query;
+    if (!roomId) {
+        return res.status(400).json({ error: 'Room ID is required' });
+    }
+
+    if (!rooms.has(roomId)) {
+        return res.status(404).json({ error: 'Room not found' });
+    }
+
+    const room = rooms.get(roomId);
+    res.json({
+        files: Array.from(room.files.entries())
+    });
+});
 
 // Socket.IO connection handling
 io.on('connection', (socket) => {
@@ -43,30 +97,66 @@ io.on('connection', (socket) => {
         // Initialize room if it doesn't exist
         if (!rooms.has(roomId)) {
             rooms.set(roomId, {
-                code: '',
+                files: new Map(),
+                versions: new Map(),
                 users: new Set()
             });
         }
         
         // Add user to room
-        rooms.get(roomId).users.add(socket.id);
+        const room = rooms.get(roomId);
+        room.users.add(socket.id);
         
-        // Send current code to new user
-        socket.emit('code-update', rooms.get(roomId).code);
+        // Send current files to new user
+        const filesState = Array.from(room.files.entries()).map(([path, content]) => ({
+            path,
+            content,
+            version: room.versions.get(path) || 0
+        }));
+        socket.emit('files-update', filesState);
+
+        // Simulate collaborator joining after 7 seconds
+        setTimeout(() => {
+            io.to(roomId).emit('user-joined', { userId: 'collaborator', username: 'Collaborator' });
+            
+            // Simulate initial code changes from collaborator
+            setTimeout(() => {
+                const filePath = 'server.js'; // Default file to modify
+                simulateCollaboratorChanges(roomId, filePath);
+            }, 1000);
+        }, 7000);
     });
 
-    socket.on('code-change', ({ roomId, code }) => {
+    socket.on('file-change', ({ roomId, filePath, content, version }) => {
+        console.log('Received file change:', { roomId, filePath, content, version });
         if (rooms.has(roomId)) {
-            // Update room's code
-            rooms.get(roomId).code = code;
-            // Broadcast to all other users in the room
-            socket.to(roomId).emit('code-update', code);
+            const room = rooms.get(roomId);
+            const currentVersion = room.versions.get(filePath) || 0;
+            
+            if (version >= currentVersion) {
+                // Update file content and version
+                room.files.set(filePath, content);
+                room.versions.set(filePath, version + 1);
+                
+                // Broadcast changes to all users in the room
+                io.to(roomId).emit('file-update', {
+                    filePath,
+                    content,
+                    version: version + 1,
+                    source: 'user'
+                });
+
+                // Simulate collaborator changes after 2 seconds
+                setTimeout(() => {
+                    simulateCollaboratorChanges(roomId, filePath);
+                }, 2000);
+            }
         }
     });
 
     socket.on('disconnect', () => {
         console.log('User disconnected');
-        // Clean up room if empty
+        // Remove user from all rooms
         rooms.forEach((room, roomId) => {
             if (room.users.has(socket.id)) {
                 room.users.delete(socket.id);
